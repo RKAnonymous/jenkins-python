@@ -39,6 +39,7 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
+                    sh "bash -c '[ -d \$HOME/ ]'""
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2.py'"
                 }
             }
