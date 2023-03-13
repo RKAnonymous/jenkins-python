@@ -32,20 +32,20 @@ pipeline {
         }
         stage('Deliver') {
             agent any
-            environment {
-                VOLUME = '$PWD/sources:/src'
-                IMAGE = 'cdrx/pyinstaller-linux:python3'
-            }
+//             environment {
+//                 VOLUME = '$PWD/sources:/src'
+//                 IMAGE = 'cdrx/pyinstaller-linux:python3'
+//             }
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2.py'"
+                    sh "docker run --rm -v $PWD/sources:/src cdrx/pyinstaller-linux:python3 'pyinstaller -F add2.py'"
                 }
             }
             post {
                 success {
                     archiveArtifacts "${env.BUILD_ID}/sources/dist/add2"
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                    sh "docker run --rm -v $PWD/sources:/src cdrx/pyinstaller-linux:python3 'rm -rf build dist'"
                 }
             }
         }
